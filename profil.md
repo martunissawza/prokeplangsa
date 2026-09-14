@@ -1,5 +1,5 @@
 ---
-title: "Profil Poltekkes Kemenkes Aceh"
+title: "Profil Prodi DIII Keperawatan Langsa"
 ---
 ## Profil
 
