@@ -1,0 +1,30 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "assets/uploads"
+public_folder: "/assets/uploads"
+
+locale: "id"
+
+collections:
+  - name: "posts"
+    label: "Berita"
+    folder: "content/posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Judul", name: "title", widget: "string"}
+      - {label: "Tanggal", name: "date", widget: "datetime"}
+      - {label: "Kategori", name: "category", widget: "string", default: "Berita"}
+      - {label: "Ringkasan", name: "description", widget: "text"}
+      - {label: "Isi", name: "body", widget: "markdown"}
+  - name: "pages"
+    label: "Halaman"
+    files:
+      - file: "content/pages/profil.md"
+        label: "Profil"
+        name: "profil"
+        fields:
+          - {label: "Judul", name: "title", widget: "string"}
+          - {label: "Isi", name: "body", widget: "markdown"}
