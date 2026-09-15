@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><meta charset="UTF-8"><title>Website</title></head>
+<body>
+<h1 id="title">Loading...</h1>
+<p id="institution"></p>
+
+<script>
+async function load(){
+ const res=await fetch('./data.json');
+ const data=await res.json();
+ document.getElementById('title').textContent=data.siteName;
+ document.getElementById('institution').textContent=data.institution;
+}
+load();
+</script>
+</body></html>

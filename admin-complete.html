@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin CMS GitHub</title></head>
+<body>
+<h1>Admin CMS GitHub + Netlify</h1>
+<p>Isi konfigurasi GitHub pada config.js lalu klik Simpan.</p>
+<textarea id="json" style="width:100%;height:300px">{}</textarea>
+<button onclick="save()">Simpan ke GitHub</button>
+
+<script src="config.js"></script>
+<script>
+async function save(){
+ const content=btoa(unescape(encodeURIComponent(document.getElementById('json').value)));
+
+ const file=await fetch(
+ `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/data.json`,
+ {headers:{Authorization:`token ${GITHUB_TOKEN}`}}
+ );
+
+ const info=await file.json();
+
+ await fetch(
+ `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/data.json`,
+ {
+  method:'PUT',
+  headers:{
+   Authorization:`token ${GITHUB_TOKEN}`,
+   'Content-Type':'application/json'
+  },
+  body:JSON.stringify({
+   message:'Update content from CMS',
+   content:content,
+   sha:info.sha
+  })
+ });
+ alert('Berhasil disimpan ke GitHub');
+}
+</script>
+</body></html>
