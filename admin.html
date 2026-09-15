@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin - Prodi DIII Keperawatan Langsa</title>
+<style>
+body{margin:0;background:#f3f5f7;font-family:Arial,sans-serif;color:#243b39}.wrap{max-width:900px;margin:30px auto;padding:20px}.box{background:#fff;padding:25px;border-radius:12px;box-shadow:0 4px 20px #0001;margin-bottom:20px}h1{margin-top:0}h2{color:#0b6b63}label{display:block;font-weight:bold;margin:14px 0 6px}input,textarea{width:100%;padding:11px;border:1px solid #ccd6d4;border-radius:7px;font:inherit}textarea{min-height:100px}button{border:0;border-radius:7px;padding:11px 17px;margin:8px 5px 0 0;font-weight:bold;cursor:pointer;background:#0b6b63;color:#fff}.danger{background:#b42318}.info{background:#eef8f6;padding:12px;border-radius:8px}.row{display:grid;grid-template-columns:1fr 1fr;gap:15px}@media(max-width:650px){.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body><div class="wrap">
+<div class="box" id="login">
+<h1>Admin Website</h1><p>PRODI DIII Keperawatan Langsa</p>
+<label>Username</label><input id="user">
+<label>Password</label><input id="pass" type="password">
+<button onclick="login()">Login</button><p id="err" style="color:#b42318"></p>
+</div>
+
+<div class="box" id="editor" style="display:none">
+<h1>Panel Admin</h1>
+<div class="info">Perubahan disimpan di browser menggunakan <b>localStorage</b>. Cocok untuk versi sederhana/demo. Agar perubahan terlihat oleh semua pengunjung, nanti dapat dihubungkan ke Supabase atau CMS.</div>
+<h2>Tampilan Utama</h2>
+<div class="row">
+<div><label>Nama Website</label><input id="siteName"></div>
+<div><label>Institusi</label><input id="institution"></div>
+<div><label>Judul Beranda</label><input id="heroTitle"></div>
+<div><label>Warna Utama</label><input id="primary" type="color"></div>
+<div><label>Warna Background</label><input id="bg" type="color"></div>
+<div><label>Warna Hero</label><input id="heroBg" type="color"></div>
+</div>
+<label>Isi Beranda</label><textarea id="heroText"></textarea>
+
+<h2>Profil</h2>
+<label>Judul</label><input id="profilTitle">
+<label>Deskripsi</label><textarea id="profilText"></textarea>
+<label>Isi Profil</label><textarea id="profilDetail"></textarea>
+
+<h2>Visi, Misi & Tujuan</h2>
+<label>Visi</label><textarea id="visi"></textarea>
+<label>Misi</label><textarea id="misi"></textarea>
+<label>Tujuan</label><textarea id="tujuan"></textarea>
+
+<h2>Akademik & Mahasiswa</h2>
+<label>Deskripsi Akademik</label><textarea id="akademik"></textarea>
+<label>Deskripsi Kemahasiswaan</label><textarea id="mahasiswa"></textarea>
+
+<h2>Kontak</h2><textarea id="kontak"></textarea>
+<label>Footer</label><input id="footer">
+
+<h2>Menu</h2>
+<div id="menus"></div>
+<button onclick="addMenu()">+ Tambah Menu</button>
+
+<h2>Kartu Akademik</h2><div id="cards"></div>
+<button onclick="addCard()">+ Tambah Kartu</button>
+
+<h2>Berita</h2><div id="berita"></div>
+<button onclick="addBerita()">+ Tambah Berita</button><br>
+
+<button onclick="save()">Simpan Perubahan</button>
+<button onclick="preview()">Buka Website</button>
+<button class="danger" onclick="resetData()">Kembalikan Default</button>
+</div></div>
+
+<script>
+const DEFAULT={
+siteName:"PRODI DIII Keperawatan Langsa",institution:"Poltekkes Kemenkes Aceh",heroTitle:"DIII Keperawatan Langsa",heroText:"Website informasi Program Studi DIII Keperawatan Langsa.",primary:"#0b6b63",bg:"#f4faf9",heroBg:"#12302d",
+profilTitle:"Profil Program Studi",profilText:"Program Studi DIII Keperawatan Langsa menyelenggarakan pendidikan vokasi keperawatan untuk menghasilkan lulusan yang kompeten, profesional dan berkarakter.",profilDetail:"Program studi terus mengembangkan pendidikan, pembelajaran, praktik laboratorium, praktik klinik, penelitian, pengabdian kepada masyarakat dan kerja sama.",
+visi:"Menjadi program studi yang menghasilkan tenaga keperawatan vokasional yang kompeten dan profesional.",misi:"Menyelenggarakan pendidikan keperawatan yang bermutu, mengembangkan penelitian dan pengabdian kepada masyarakat, serta memperkuat kerja sama.",tujuan:"Menghasilkan lulusan yang memiliki pengetahuan, keterampilan dan sikap profesional sesuai kebutuhan pelayanan kesehatan.",
+akademik:"Informasi akademik, kurikulum, pembelajaran dan kegiatan praktik mahasiswa.",mahasiswa:"Informasi kegiatan mahasiswa, organisasi, prestasi, layanan kemahasiswaan dan kegiatan pengembangan diri.",kontak:"Alamat kampus | Telepon: - | Email: - | Website: -",footer:"© 2026 Prodi DIII Keperawatan Langsa. Semua hak dilindungi.",
+menu:[["Beranda","#beranda"],["Profil","#profil"],["Visi & Misi","#visi"],["Akademik","#akademik"],["Mahasiswa","#kemahasiswaan"],["Berita","#berita"],["Kontak","#kontak"]],
+cards:[["Kurikulum","Informasi kurikulum dan proses pembelajaran."],["Laboratorium","Informasi praktik laboratorium keperawatan."],["Praktik Klinik","Informasi pelaksanaan praktik klinik mahasiswa."]],
+berita:[["Pengumuman","Informasi terbaru Program Studi DIII Keperawatan Langsa."],["Kegiatan Akademik","Informasi kegiatan pembelajaran dan praktik mahasiswa."],["Kegiatan Mahasiswa","Berita kegiatan dan prestasi mahasiswa."]]};
+let d={};
+function data(){try{return {...DEFAULT,...JSON.parse(localStorage.getItem("prodiLangsa"))}}catch(e){return {...DEFAULT}}}
+function login(){if(user.value==="admin"&&pass.value==="admin"){loginBox.style.display="none";editor.style.display="block";load()}else err.textContent="Username atau password salah."}
+function load(){d=data();Object.keys(d).forEach(k=>{let e=document.getElementById(k);if(e&&typeof d[k]==="string")e.value=d[k]});renderLists()}
+function renderLists(){
+ menus.innerHTML=d.menu.map((x,i)=>`<div class="row"><input value="${x[0]}" oninput="d.menu[${i}][0]=this.value"><input value="${x[1]}" oninput="d.menu[${i}][1]=this.value"></div>`).join("");
+ cards.innerHTML=d.cards.map((x,i)=>`<div class="row"><input value="${x[0]}" oninput="d.cards[${i}][0]=this.value"><input value="${x[1]}" oninput="d.cards[${i}][1]=this.value"></div>`).join("");
+ berita.innerHTML=d.berita.map((x,i)=>`<div class="row"><input value="${x[0]}" oninput="d.berita[${i}][0]=this.value"><input value="${x[1]}" oninput="d.berita[${i}][1]=this.value"></div>`).join("");
+}
+function addMenu(){d.menu.push(["Menu Baru","#"]);renderLists()}
+function addCard(){d.cards.push(["Judul Baru","Isi baru"]);renderLists()}
+function addBerita(){d.berita.push(["Berita Baru","Isi berita baru"]);renderLists()}
+function save(){["siteName","institution","heroTitle","heroText","primary","bg","heroBg","profilTitle","profilText","profilDetail","visi","misi","tujuan","akademik","mahasiswa","kontak","footer"].forEach(k=>d[k]=document.getElementById(k).value);localStorage.setItem("prodiLangsa",JSON.stringify(d));alert("Perubahan berhasil disimpan.");}
+function preview(){window.open("index.html","_blank")}
+function resetData(){if(confirm("Kembalikan semua isi ke default?")){localStorage.removeItem("prodiLangsa");load()}}
+</script>
+</body></html>
